@@ -1,0 +1,61 @@
+version: "3"
+services:
+  postgres-service:
+    image: library/postgres:13
+    container_name: postgres
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./postgres/:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+
+  privileges-service:
+    build:
+      context: src/privileges
+    ports:
+      - "8050:8050"
+    depends_on:
+      - postgres-service
+    links: 
+      - postgres-service
+    restart: on-failure
+
+  flights-service:
+    build:
+      context: src/flights
+    ports:
+      - "8060:8060"
+    depends_on:
+      - postgres-service
+    links: 
+      - postgres-service
+    restart: on-failure
+  
+  tickets-service:
+    build:
+      context: src/tickets
+    ports:
+      - "8070:8070"
+    depends_on:
+      - postgres-service
+    links: 
+      - postgres-service
+    restart: on-failure
+
+  gateway-service:
+    build:
+      context: src/gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - flights-service
+      - privileges-service
+      - tickets-service
+
+volumes:
+  db-data:
