@@ -71,3 +71,24 @@ func SuccessTicketDeletion(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusNoContent)
 	json.NewEncoder(w).Encode("Возврат билета успешно выполнен")
 }
+
+func TokenIsMissing(w http.ResponseWriter) {
+	msg := "Missing auth token"
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusUnauthorized)
+	json.NewEncoder(w).Encode(msg)
+}
+
+func JwtAccessDenied(w http.ResponseWriter) {
+	msg := "jwt-token is not valid"
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusUnauthorized)
+	json.NewEncoder(w).Encode(msg)
+}
+
+func TokenExpired(w http.ResponseWriter) {
+	msg := "jwt-token expired"
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusUnauthorized)
+	json.NewEncoder(w).Encode(msg)
+}

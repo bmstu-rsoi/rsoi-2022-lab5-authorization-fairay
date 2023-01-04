@@ -25,16 +25,16 @@ func NewTicketsM(client *http.Client, flights *FlightsM) *TicketsM {
 	}
 }
 
-func (model *TicketsM) FetchUser(username string) (*objects.UserInfoResponse, error) {
+func (model *TicketsM) FetchUser(authHeader string) (*objects.UserInfoResponse, error) {
 	data := new(objects.UserInfoResponse)
-	tickets, err := model.fetch(username)
+	tickets, err := model.fetch(authHeader)
 	if err != nil {
 		return nil, err
 	}
 	flights := model.flights.Fetch(1, 100).Items
 	data.Tickets = objects.MakeTicketResponseArr(tickets, flights)
 
-	privilege := model.privileges.Fetch(username)
+	privilege := model.privileges.Fetch(authHeader)
 	data.Privilege = objects.PrivilegeShortInfo{
 		Balance: privilege.Balance,
 		Status:  privilege.Status,
@@ -42,11 +42,9 @@ func (model *TicketsM) FetchUser(username string) (*objects.UserInfoResponse, er
 	return data, nil
 }
 
-func (model *TicketsM) fetch(username string) (objects.TicketArr, error) {
+func (model *TicketsM) fetch(authHeader string) (objects.TicketArr, error) {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/tickets", utils.Config.TicketsEndpoint), nil)
-	if username != "" {
-		req.Header.Set("X-User-Name", username)
-	}
+	req.Header.Set("Authorization", authHeader)
 	resp, err := model.client.Do(req)
 	if err != nil {
 		return nil, err
@@ -72,10 +70,10 @@ func (model *TicketsM) Fetch() ([]objects.TicketResponse, error) {
 	return objects.MakeTicketResponseArr(tickets, flights), nil
 }
 
-func (model *TicketsM) create(flight_number string, price int, username string) (*objects.TicketCreateResponse, error) {
+func (model *TicketsM) create(flight_number string, price int, authHeader string) (*objects.TicketCreateResponse, error) {
 	req_body, _ := json.Marshal(&objects.TicketCreateRequest{FlightNumber: flight_number, Price: price})
 	req, _ := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/tickets", utils.Config.TicketsEndpoint), bytes.NewBuffer(req_body))
-	req.Header.Add("X-User-Name", username)
+	req.Header.Add("Authorization", authHeader)
 
 	if resp, err := model.client.Do(req); err != nil {
 		return nil, err
@@ -87,20 +85,20 @@ func (model *TicketsM) create(flight_number string, price int, username string) 
 	}
 }
 
-func (model *TicketsM) Create(flight_number string, username string, price int, from_balance bool) (*objects.TicketPurchaseResponse, error) {
+func (model *TicketsM) Create(flight_number string, authHeader string, price int, from_balance bool) (*objects.TicketPurchaseResponse, error) {
 	flight, err := model.flights.Find(flight_number)
 	if err != nil {
 		utils.Logger.Println(err.Error())
 		return nil, err
 	}
 
-	ticket, err := model.create(flight_number, price, username)
+	ticket, err := model.create(flight_number, price, authHeader)
 	if err != nil {
 		utils.Logger.Println(err.Error())
 		return nil, err
 	}
 
-	privilege, err := model.privileges.AddTicket(username, &objects.AddHistoryRequest{
+	privilege, err := model.privileges.AddTicket(authHeader, &objects.AddHistoryRequest{
 		TicketUID:       ticket.TicketUid,
 		Price:           flight.Price,
 		PaidFromBalance: from_balance,
@@ -126,7 +124,7 @@ func (model *TicketsM) find(ticket_uid string) (*objects.Ticket, error) {
 	}
 }
 
-func (model *TicketsM) Find(ticket_uid string, username string) (*objects.TicketResponse, error) {
+func (model *TicketsM) Find(ticket_uid string, username string, authHeader string) (*objects.TicketResponse, error) {
 	ticket, err := model.find(ticket_uid)
 	if err != nil {
 		return nil, err
@@ -148,7 +146,7 @@ func (model *TicketsM) delete(ticket_uid string) error {
 	return err
 }
 
-func (model *TicketsM) Delete(ticket_uid string, username string) error {
+func (model *TicketsM) Delete(ticket_uid string, username string, authHeader string) error {
 	ticket, err := model.find(ticket_uid)
 	if err != nil {
 		return err
@@ -160,5 +158,5 @@ func (model *TicketsM) Delete(ticket_uid string, username string) error {
 		return err
 	}
 
-	return model.privileges.DeleteTicket(username, ticket_uid)
+	return model.privileges.DeleteTicket(authHeader, ticket_uid)
 }

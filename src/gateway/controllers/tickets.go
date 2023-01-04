@@ -26,8 +26,7 @@ func InitTickets(r *mux.Router, tickets *models.TicketsM) {
 }
 
 func (ctrl *ticketsCtrl) me(w http.ResponseWriter, r *http.Request) {
-	username := r.Header.Get("X-User-Name")
-	data, err := ctrl.tickets.FetchUser(username)
+	data, err := ctrl.tickets.FetchUser(r.Header.Get("Authorization"))
 	if err != nil {
 		responses.InternalError(w)
 	} else {
@@ -52,7 +51,7 @@ func (ctrl *ticketsCtrl) post(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := ctrl.tickets.Create(req_body.FlightNumber, r.Header.Get("X-User-Name"), req_body.Price, req_body.PaidFromBalance)
+	data, err := ctrl.tickets.Create(req_body.FlightNumber, r.Header.Get("Authorization"), req_body.Price, req_body.PaidFromBalance)
 	if err != nil {
 		responses.InternalError(w)
 	} else {
@@ -63,9 +62,10 @@ func (ctrl *ticketsCtrl) post(w http.ResponseWriter, r *http.Request) {
 func (ctrl *ticketsCtrl) get(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	ticket_uid := urlParams["ticketUid"]
+	authHeader := r.Header.Get("Authorization")
 	username := r.Header.Get("X-User-Name")
 
-	data, err := ctrl.tickets.Find(ticket_uid, username)
+	data, err := ctrl.tickets.Find(ticket_uid, username, authHeader)
 	switch err {
 	case nil:
 		responses.JsonSuccess(w, data)
@@ -77,11 +77,13 @@ func (ctrl *ticketsCtrl) get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *ticketsCtrl) delete(w http.ResponseWriter, r *http.Request) {
+	
 	urlParams := mux.Vars(r)
 	ticket_uid := urlParams["ticketUid"]
+	authHeader := r.Header.Get("Authorization")
 	username := r.Header.Get("X-User-Name")
 
-	err := ctrl.tickets.Delete(ticket_uid, username)
+	err := ctrl.tickets.Delete(ticket_uid, username, authHeader)
 	switch err {
 	case nil:
 		responses.SuccessTicketDeletion(w)

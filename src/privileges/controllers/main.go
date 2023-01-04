@@ -14,6 +14,7 @@ import (
 func initControllers(r *mux.Router, m *models.Models) {
 	r.Use(utils.LogHandler)
 	api1_r := r.PathPrefix("/api/v1/").Subrouter()
+	api1_r.Use(JwtAuthentication)
 
 	InitPrivileges(api1_r, m.Privileges)
 }
