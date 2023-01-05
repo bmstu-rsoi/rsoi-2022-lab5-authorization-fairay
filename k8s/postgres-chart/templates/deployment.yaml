@@ -45,7 +45,7 @@ spec:
               containerPort: {{ .Values.port }}
           volumeMounts:
             - name: db-data
-              mountPath: /var/lib/postgresql/data4
+              mountPath: /var/lib/postgresql/data5
             - name: postgres-config-map
               mountPath: /docker-entrypoint-initdb.d/
       volumes:
