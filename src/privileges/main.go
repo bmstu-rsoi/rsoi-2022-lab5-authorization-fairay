@@ -31,7 +31,7 @@ func initDBConnection(cnf utils.DBConfiguration) *gorm.DB {
 
 	privilege := &objects.Privilege{
 		Id:       1,
-		Username: "Test Max",
+		Username: "TestMax@none.com",
 		Status:   "BRONZE",
 		Balance:  0,
 	}
