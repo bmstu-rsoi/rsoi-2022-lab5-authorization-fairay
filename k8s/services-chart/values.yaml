@@ -2,7 +2,7 @@ privileges:
   service:
     port: 8050
     image:
-      name: fairay/rsoi-lab4-privileges
+      name: fairay/rsoi-lab5-privileges
       version: latest
     database:
       name: privileges
@@ -10,7 +10,7 @@ flights:
   service:
     port: 8060
     image:
-      name: fairay/rsoi-lab4-flights
+      name: fairay/rsoi-lab5-flights
       version: latest
     database:
       name: flights
@@ -18,7 +18,7 @@ tickets:
   service:
     port: 8070
     image:
-      name: fairay/rsoi-lab4-tickets
+      name: fairay/rsoi-lab5-tickets
       version: latest
     database:
       name: tickets
@@ -26,7 +26,7 @@ gateway:
   service:
     port: 8080
     image:
-      name: fairay/rsoi-lab4-gateway
+      name: fairay/rsoi-lab5-gateway
       version: latest
     ingress:
       enabled: true

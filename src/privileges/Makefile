@@ -15,8 +15,8 @@ run: build
 	.\temp\privileges.exe
 
 docker-push:
-	docker build --no-cache -t fairay/rsoi-lab4-privileges .
-	docker push fairay/rsoi-lab4-privileges:latest
+	docker build --no-cache -t fairay/rsoi-lab5-privileges .
+	docker push fairay/rsoi-lab5-privileges:latest
 
 # Creating directories
 DIRS?=logs temp

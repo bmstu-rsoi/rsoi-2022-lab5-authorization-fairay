@@ -15,8 +15,8 @@ run: build
 	.\temp\tickets.exe
 
 docker-push:
-	docker build --no-cache -t fairay/rsoi-lab4-tickets .
-	docker push fairay/rsoi-lab4-tickets:latest
+	docker build --no-cache -t fairay/rsoi-lab5-tickets .
+	docker push fairay/rsoi-lab5-tickets:latest
 
 # Creating directories
 DIRS?=logs temp

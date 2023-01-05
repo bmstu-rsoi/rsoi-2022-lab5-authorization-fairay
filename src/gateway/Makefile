@@ -15,8 +15,8 @@ run: build
 	.\temp\gateway.exe
 
 docker-push:
-	docker build --no-cache -t fairay/rsoi-lab4-gateway .
-	docker push fairay/rsoi-lab4-gateway:latest
+	docker build --no-cache -t fairay/rsoi-lab5-gateway .
+	docker push fairay/rsoi-lab5-gateway:latest
 
 # Creating directories
 DIRS?=logs temp

@@ -15,8 +15,8 @@ run: build
 	.\temp\flights.exe
 
 docker-push:
-	docker build --no-cache -t fairay/rsoi-lab4-flights .
-	docker push fairay/rsoi-lab4-flights:latest
+	docker build --no-cache -t fairay/rsoi-lab5-flights .
+	docker push fairay/rsoi-lab5-flights:latest
 
 # Creating directories
 DIRS?=logs temp
