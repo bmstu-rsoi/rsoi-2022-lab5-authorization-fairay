@@ -19,12 +19,13 @@ func NewFlightsM(client *http.Client) *FlightsM {
 	return &FlightsM{client: client}
 }
 
-func (model *FlightsM) Fetch(page int, page_size int) *objects.PaginationResponse {
+func (model *FlightsM) Fetch(page int, page_size int, authHeader string) *objects.PaginationResponse {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights", utils.Config.FlightsEndpoint), nil)
 	q := req.URL.Query()
 	q.Add("page", fmt.Sprintf("%d", page))
 	q.Add("size", fmt.Sprintf("%d", page_size))
 	req.URL.RawQuery = q.Encode()
+	req.Header.Add("Authorization", authHeader)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -41,8 +42,9 @@ func (model *FlightsM) Fetch(page int, page_size int) *objects.PaginationRespons
 	return data
 }
 
-func (model *FlightsM) Find(flight_number string) (*objects.FlightResponse, error) {
+func (model *FlightsM) Find(flight_number string, authHeader string) (*objects.FlightResponse, error) {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/flights/%s", utils.Config.FlightsEndpoint, flight_number), nil)
+	req.Header.Add("Authorization", authHeader)
 	resp, err := model.client.Do(req)
 	if err != nil {
 		return nil, err

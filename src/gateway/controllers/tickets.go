@@ -35,7 +35,7 @@ func (ctrl *ticketsCtrl) me(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *ticketsCtrl) fetch(w http.ResponseWriter, r *http.Request) {
-	data, err := ctrl.tickets.Fetch()
+	data, err := ctrl.tickets.Fetch(r.Header.Get("Authorization"))
 	if err != nil {
 		responses.InternalError(w)
 	} else {
