@@ -194,10 +194,6 @@ build-iPhoneSimulator/
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -356,7 +352,6 @@ local.properties
 *.pdb
 
 # Kernel Module Compile Results
-*.mod*
 *.cmd
 .tmp_versions/
 modules.order
@@ -505,7 +500,6 @@ CMakeCache.txt
 CMakeFiles
 CMakeScripts
 Testing
-Makefile
 cmake_install.cmake
 install_manifest.txt
 compile_commands.json
@@ -546,7 +540,6 @@ qrc_*.cpp
 ui_*.h
 *.qmlc
 *.jsc
-Makefile*
 *build-*
 *.qm
 *.prl
@@ -718,7 +711,6 @@ inc/
 /blib/
 /_eumm/
 /*.gz
-/Makefile
 /Makefile.old
 /MANIFEST.bak
 /pm_to_blib
@@ -1196,7 +1188,6 @@ FodyWeavers.xsd
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
-[Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
 
